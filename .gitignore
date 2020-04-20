@@ -1,0 +1,7 @@
+.gitsecret/keys/random_seed
+!*.secret
+.env
+.pytest_cache/
+__pycache__/
+.tox
+app.log

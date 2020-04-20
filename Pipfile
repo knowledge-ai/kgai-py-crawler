@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+autopep8 = "*"
+pytest = "*"
+
+[packages]
+requests = "*"
+flask-restx = "*"
+newsapi-python = "*"
+newspaper3k = "*"
+tox = "*"
+python-dotenv = "*"
+xxhash = "*"
+kgio-py-commons = {editable = true,git = "https://github.com/knowledge-io/kgio-py-commons"}
+
+[requires]
+python_version = "3.7"
