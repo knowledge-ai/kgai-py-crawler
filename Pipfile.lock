@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "dce3f10a055fe93a25a87a76b70ded1663010260a3c9df074a588ce9ff21ea52"
+            "sha256": "749b04bd6a9547fa5b914427ae0f79c76ea2248fb8c31a9abe9eb04ed7e276f9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -215,10 +215,10 @@
             ],
             "version": "==3.2.0"
         },
-        "kgio-py-commons": {
+        "kgai-py-commons": {
             "editable": true,
-            "git": "https://github.com/knowledge-io/kgio-py-commons",
-            "ref": "10453590cf877921b7a6d7f9294b184bccf2203f"
+            "git": "https://github.com/knowledge-ai/kgai-py-commons",
+            "ref": "b3132b0cd45dedf5aa4228ec1ce4ec1d71e49c43"
         },
         "lxml": {
             "hashes": [

@@ -3,8 +3,8 @@ Cleans up news articles so that clean text is remaining
 """
 from typing import List
 
-from kgio_py_commons.logging.log import TRLogger
-from kgio_py_commons.model.googlenews.news_article import NewsArticle
+from kgai_py_commons.logging.log import TRLogger
+from kgai_py_commons.model.googlenews.news_article import NewsArticle
 from newspaper import Article, ArticleException
 
 

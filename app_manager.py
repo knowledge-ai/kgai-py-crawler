@@ -7,7 +7,7 @@ __author__ = 'Ritaja'
 import os
 
 from dotenv import load_dotenv
-from kgio_py_commons.logging.log import TRLogger
+from kgai_py_commons.logging.log import TRLogger
 
 from kgai_crawler.controller.news_aggregator import NewsAggregator
 

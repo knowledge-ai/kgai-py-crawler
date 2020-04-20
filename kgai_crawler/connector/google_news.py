@@ -6,9 +6,9 @@ from http.client import HTTPException
 from typing import List
 
 from dacite import from_dict
-from kgio_py_commons.logging.log import TRLogger
-from kgio_py_commons.model.googlenews.news_article import NewsArticle
-from kgio_py_commons.model.googlenews.source_article import SourceArticle
+from kgai_py_commons.logging.log import TRLogger
+from kgai_py_commons.model.googlenews.news_article import NewsArticle
+from kgai_py_commons.model.googlenews.source_article import SourceArticle
 from newsapi import NewsApiClient
 
 

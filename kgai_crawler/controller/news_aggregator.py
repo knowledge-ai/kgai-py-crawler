@@ -4,9 +4,9 @@ Collects, scraps and aggregates the news
 from typing import List
 
 import xxhash
-from kgio_py_commons.clients.kafka.producer.producer import TRAvroProducer
-from kgio_py_commons.logging.log import TRLogger
-from kgio_py_commons.model.googlenews.news_article import NewsArticle
+from kgai_py_commons.clients.kafka.producer.producer import TRAvroProducer
+from kgai_py_commons.logging.log import TRLogger
+from kgai_py_commons.model.googlenews.news_article import NewsArticle
 
 from kgai_crawler.connector.google_news import GoogNews
 from kgai_crawler.service.news_cleaner import NewsCleaner

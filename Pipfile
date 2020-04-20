@@ -16,7 +16,7 @@ newspaper3k = "*"
 tox = "*"
 python-dotenv = "*"
 xxhash = "*"
-kgio-py-commons = {editable = true,git = "https://github.com/knowledge-io/kgio-py-commons"}
+kgai-py-commons = {editable = true,git = "https://github.com/knowledge-ai/kgai-py-commons"}
 
 [requires]
 python_version = "3.7"
