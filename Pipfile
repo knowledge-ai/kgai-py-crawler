@@ -17,6 +17,7 @@ tox = "*"
 python-dotenv = "*"
 xxhash = "*"
 kgai-py-commons = {editable = true,git = "https://github.com/knowledge-ai/kgai-py-commons"}
+confluent-kafka = {extras = ["avro"],version = "*"}
 
 [requires]
 python_version = "3.7"

@@ -36,9 +36,9 @@ These steps cover the basic process of using git-secret:
 
 - Begin with an existing or new git repository. You’ll use the ‘`git secret’` commands to add the keyrings and information to make the git-secret hide and reveal files in this repository.
 
-- Initialize the git-secret repository by running git secret init command. the `.gitsecret/` folder will be created, Note all the contents of the .gitsecret/ folder should be checked in, /except/ the random_seed file. In other words, of the files in .gitsecret, only the random_seed file should be mentioned in your .gitignore file.
+- Initialize the git-secret repository by running `git secret init` command. the `.gitsecret/` folder will be created, Note all the contents of the .gitsecret/ folder should be checked in, /except/ the random_seed file. In other words, of the files in .gitsecret, only the random_seed file should be mentioned in your .gitignore file.
 
-- Add the first user to the git-secret repo keyring by running git secret tell your@gpg.email.
+- Add the first user to the git-secret repo keyring by running `git secret tell your@gpg.email`.
 
 - Now it’s time to add files you wish to encrypt inside the git-secret repository. It can be done by running `git secret add <filenames...>` command. Make sure these files are ignored by mentions in `.gitignore`, otherwise git-secret won’t allow you to add them, as these files could be stored unencrypted.
 
@@ -66,6 +66,8 @@ You can follow a quick gpg [tutorial](https://www.devdungeon.com/content/gpg-tut
 `gpg --export your.email@address.com --armor > public-key.gpg`
 - To import the public key of someone else (to share the secret with them for instance), run:
 `gpg --import public-key.gpg`
+- GPG folder default is `~/.gnupg`
+- To see available GPG keys: `gpg --list-keys`
 Be sure to use a secure channel to share your public key!
 
 [Reference architecture](https://medium.com/vantageai/keeping-your-ml-model-in-shape-with-kafka-airflow-and-mlflow-143d20024ba6) 
