@@ -21,7 +21,7 @@ class GoogNews(object):
         self._news_client = NewsApiClient(api_key=api_key)
         self.logger = TRLogger.instance().get_logger(__name__)
 
-    def get_news(self, topic: str, scrape_month: bool = False, parse_all: bool = True) -> List[NewsArticle]:
+    def get_news(self, topic: str, scrape_month: bool = False) -> List[NewsArticle]:
         """
         Retrieves google news for a topic
         Args:
@@ -33,33 +33,46 @@ class GoogNews(object):
 
         """
         all_articles = []
-        page_size = 100
-        cur_page = 1
-        tot_results = 100
-        from_date = to_date = None
-        if scrape_month:
-            from_date = datetime.today()
-            to_date = from_date - timedelta(days=30)
+        from_date = datetime.now()
+        to_date = datetime.now() - timedelta(days=1)
         try:
-            while cur_page * page_size <= tot_results:
-                # /v2/everything
-                articles = self._news_client.get_everything(q=topic,
-                                                            # language='en',
-                                                            from_param=from_date,
-                                                            to=to_date,
-                                                            sort_by='relevancy',
-                                                            page_size=page_size,
-                                                            page=cur_page)
-                # map to dataclass
-                all_articles.extend(self._map_articles(articles=articles))
-                # only if we want to parse all
-                cur_page += 1
-                if parse_all:
-                    tot_results = articles.get("totalResults", 100)
+            if scrape_month:
+                for delta in range(0, 30):
+                    from_date = from_date - timedelta(days=delta)
+                    to_date = to_date - timedelta(days=delta + 1)
+                    all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
+            else:
+                all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
         except HTTPException as exp:
             self.logger.error("Unable to fetch news, HTTP error: {}".format(exp))
 
         return all_articles
+
+    def _get_news_free(self, topic: str, from_date: datetime, to_date: datetime) -> List[NewsArticle]:
+        """
+        Get free news which is limited to 100 news articles, for the given date
+        Args:
+            topic:
+            from_date:
+            to_date:
+
+        Returns:
+
+        """
+        try:
+            # /v2/everything
+            articles = self._news_client.get_everything(q=topic,
+                                                        language='en',
+                                                        from_param=from_date,
+                                                        to=to_date,
+                                                        sort_by='relevancy',
+                                                        page_size=100,  # cannot get more than this in free plan
+                                                        page=1)  # same as above
+            # map to dataclass
+            return self._map_articles(articles=articles)
+
+        except HTTPException as exp:
+            self.logger.error("Unable to fetch news, HTTP error: {}".format(exp))
 
     def get_news_headlines(self, country: str) -> List[NewsArticle]:
         """
@@ -72,7 +85,7 @@ class GoogNews(object):
         """
         headlines = {}
         try:
-            headlines = self._news_client.get_top_headlines(country=country)
+            headlines = self._news_client.get_top_headlines(country=country, page_size=100)
         except HTTPException as exp:
             self.logger.error("Unable to fetch news, HTTP error: {}".format(exp))
 

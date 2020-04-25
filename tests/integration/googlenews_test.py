@@ -22,7 +22,7 @@ class TestGooglenews(object):
         cls.goog_client = GoogNews(api_key=os.getenv("GOOG_NEWS_KEY"))
 
     def test_news(self):
-        news = self.goog_client.get_news(topic="corona", scrape_month=False, parse_all=False)
+        news = self.goog_client.get_news(topic="corona", scrape_month=False)
         assert len(news), "Expected news on topic"
 
     def test_news_headlines(self):

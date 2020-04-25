@@ -25,7 +25,5 @@ class TestNewsAggregator(object):
     @pytest.mark.slow
     def test_news_article(self):
         kafka_topic = os.getenv("KAFKA_NEWS_RAW_TOPIC") + "-test"
-        news = self.news_aggregator.aggregate(news_topic="corona", scrape_month=False, parse_all=False,
-                                              kafka_topic=kafka_topic)
+        news = self.news_aggregator.aggregate_google(news_topic="corona", scrape_month=False, kafka_topic=kafka_topic)
         assert len(news), "Expected news on topic"
-        assert news.pop().articleText, "Expected news on topic"

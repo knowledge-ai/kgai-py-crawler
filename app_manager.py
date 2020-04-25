@@ -6,6 +6,7 @@ __author__ = 'Ritaja'
 
 import os
 
+from distutils.util import strtobool
 from dotenv import load_dotenv
 from kgai_py_commons.logging.log import TRLogger
 
@@ -14,7 +15,6 @@ from kgai_crawler.controller.news_aggregator import NewsAggregator
 
 class AppManager(object):
     def __init__(self):
-        load_dotenv()
         self.logger = TRLogger.instance().get_logger(__name__)
         self._goog_api_key()
         self._kafka_config()
@@ -53,21 +53,24 @@ class AppManager(object):
         self.avro_namespace = os.getenv("AVRO_NAMESPACE")
         self.kafka_topic = os.getenv("KAFKA_NEWS_RAW_TOPIC")
 
-    def gather_news(self, news_topic: str, scrape_month: bool = False, parse_all: bool = True):
+    def gather_news(self, news_topic: str, scrape_month: bool = False):
         """
         scrapes and aggregates all news articles and publishes to kafka stream
         Args:
             news_topic:
             scrape_month:
-            parse_all:
 
         Returns:
 
         """
-        self.news_aggregator.aggregate(news_topic=news_topic, kafka_topic=self.kafka_topic, scrape_month=scrape_month,
-                                       parse_all=parse_all)
+        self.news_aggregator.aggregate_google(news_topic=news_topic, kafka_topic=self.kafka_topic,
+                                              scrape_month=scrape_month)
+        self.news_aggregator.aggregate_non_google(kafka_topic=self.kafka_topic)
 
 
 if __name__ == '__main__':
-    AppManager().gather_news(news_topic=os.getenv("NEWS_TOPIC"), scrape_month=bool(os.getenv("SCRAPE_MONTH")),
-                             parse_all=bool(os.getenv("PARSE_ALL")))
+    load_dotenv()
+    news_topic = os.getenv("NEWS_TOPIC")
+    scrape_month = strtobool(os.getenv("SCRAPE_MONTH"))
+    parse_all = strtobool(os.getenv("PARSE_ALL"))
+    AppManager().gather_news(news_topic=news_topic, scrape_month=scrape_month)
