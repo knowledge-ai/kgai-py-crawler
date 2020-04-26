@@ -10,6 +10,7 @@ from kgai_py_commons.logging.log import TRLogger
 from kgai_py_commons.model.googlenews.news_article import NewsArticle
 from kgai_py_commons.model.googlenews.source_article import SourceArticle
 from newsapi import NewsApiClient
+from newsapi.newsapi_exception import NewsAPIException
 
 
 class GoogNews(object):
@@ -37,13 +38,14 @@ class GoogNews(object):
         to_date = datetime.now() - timedelta(days=1)
         try:
             if scrape_month:
-                for delta in range(0, 30):
+                for delta in range(0, 24):
+                    self.logger.info("Requesting google news from_date: {}, to_date: {}".format(from_date, to_date))
                     from_date = from_date - timedelta(days=delta)
                     to_date = to_date - timedelta(days=delta + 1)
                     all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
             else:
                 all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
-        except HTTPException as exp:
+        except HTTPException or NewsAPIException as exp:
             self.logger.error("Unable to fetch news, HTTP error: {}".format(exp))
 
         return all_articles

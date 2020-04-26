@@ -52,6 +52,10 @@ class AppManager(object):
         self.kafka_schema = os.getenv("KAFKA_SCHEMA")
         self.avro_namespace = os.getenv("AVRO_NAMESPACE")
         self.kafka_topic = os.getenv("KAFKA_NEWS_RAW_TOPIC")
+        self.logger.info(
+            "kafka client configured with KAFKA_BROKER: {}, KAFKA_SCHEMA: {}, AVRO_NAMESPACE: {}, "
+            "KAFKA_NEWS_RAW_TOPIC: {}".format(
+                self.kafka_broker, self.kafka_schema, self.avro_namespace, self.kafka_topic))
 
     def gather_news(self, news_topic: str, scrape_month: bool = False):
         """
@@ -63,6 +67,8 @@ class AppManager(object):
         Returns:
 
         """
+        self.logger.info(
+            "Gathering news.. config: NEWS_TOPIC:{}, SCRAPE_MONTH:{}".format(news_topic, scrape_month))
         self.news_aggregator.aggregate_google(news_topic=news_topic, kafka_topic=self.kafka_topic,
                                               scrape_month=scrape_month)
         self.news_aggregator.aggregate_non_google(kafka_topic=self.kafka_topic)
@@ -72,5 +78,4 @@ if __name__ == '__main__':
     load_dotenv()
     news_topic = os.getenv("NEWS_TOPIC")
     scrape_month = strtobool(os.getenv("SCRAPE_MONTH"))
-    parse_all = strtobool(os.getenv("PARSE_ALL"))
     AppManager().gather_news(news_topic=news_topic, scrape_month=scrape_month)

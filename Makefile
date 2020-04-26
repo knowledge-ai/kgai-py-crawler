@@ -21,6 +21,9 @@ run-app: ## runs the dockerized app
 
 run-app-interactive: ## runs the dockerized app interactive mode
 	docker run -it knowledgeai/kgai-py-crawler:$(shell cat "./version.md")
+
+push-image: ## pushes the image to the docker repo
+	docker push knowledgeai/kgai-py-crawler:$(shell cat "./version.md")
 	
 
 
