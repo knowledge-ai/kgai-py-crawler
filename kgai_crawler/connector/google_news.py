@@ -34,14 +34,16 @@ class GoogNews(object):
 
         """
         all_articles = []
-        from_date = datetime.now()
-        to_date = datetime.now() - timedelta(days=1)
+        from_date = to_date = base_date =datetime.now()
+
         try:
             if scrape_month:
-                for delta in range(0, 24):
-                    self.logger.info("Requesting google news from_date: {}, to_date: {}".format(from_date, to_date))
-                    from_date = from_date - timedelta(days=delta)
-                    to_date = to_date - timedelta(days=delta + 1)
+                for delta in range(0, 30):
+                    from_date = base_date - timedelta(days=delta)
+                    to_date = from_date - timedelta(days=1)
+                    self.logger.info(
+                        "Requesting google news from_date: {}, to_date: {}, delta: {}".format(from_date, to_date,
+                                                                                              delta))
                     all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
             else:
                 all_articles.extend(self._get_news_free(topic=topic, from_date=from_date, to_date=to_date))
