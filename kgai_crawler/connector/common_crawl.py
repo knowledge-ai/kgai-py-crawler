@@ -27,9 +27,8 @@ from kgai_py_commons.clients.kafka.producer.producer import TRAvroProducer
 from kgai_py_commons.logging.log import TRLogger
 from kgai_py_commons.model.googlenews.news_article import NewsArticle
 from kgai_py_commons.model.googlenews.source_article import SourceArticle
-from newsplease.crawler import commoncrawl_crawler as commoncrawl_crawler
-from newsplease.examples.commoncrawl import on_valid_article_extracted
 
+from kgai_crawler.scripts import commoncrawl_crawler
 from kgai_crawler.utils.common_utils import hash_article
 
 
@@ -39,6 +38,7 @@ class CommonCrawl(object):
         """
         Configures the class to prep for downloading from common crawl
         explanations for arguments below
+        if start_date and end_date is not defined, default takes current date and looks back 60
         Args:
             download_dir_article:
             download_dir_warc:
@@ -51,18 +51,17 @@ class CommonCrawl(object):
         self.dir_article = download_dir_article
         # hosts (if None or empty list, any host is OK)
         self.filter_valid_hosts = []  # example: ['elrancaguino.cl']
-        # start date (if None, any date is OK as start date), as datetime
-        if not filter_start_date:
-            # self.filter_start_date = datetime.datetime.now()  # datetime.datetime(2016, 1, 1)
-            self.filter_start_date = datetime.datetime(2016, 8, 1)  # datetime.datetime(2016, 1, 1)
-        else:
-            self.filter_start_date = filter_start_date
         # end date (if None, any date is OK as end date), as datetime
         if not filter_end_date:
-            # self.filter_end_date = self.filter_start_date + datetime.timedelta(days=30)  # datetime.datetime(2016, 1, 1)
-            self.filter_end_date = self.filter_start_date + datetime.timedelta(days=30)  # datetime.datetime(2016, 1, 1)
+            self.filter_end_date = datetime.datetime.now()  # datetime.datetime(2016, 1, 1)
         else:
             self.filter_end_date = filter_end_date
+        # start date (if None, any date is OK as start date), as datetime
+        if not filter_start_date:
+            self.filter_start_date = self.filter_end_date - datetime.timedelta(
+                days=15)  # datetime.datetime(2016, 1, 1)
+        else:
+            self.filter_start_date = filter_start_date
         # if date filtering is strict and news-please could not detect
         # the date of an article, the article will be discarded
         self.filter_strict_date = True
