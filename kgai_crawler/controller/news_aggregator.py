@@ -2,14 +2,15 @@
 Collects, scraps and aggregates the news
 """
 
-import xxhash
 from kgai_py_commons.clients.kafka.producer.producer import TRAvroProducer
 from kgai_py_commons.logging.log import TRLogger
 from kgai_py_commons.model.googlenews.news_article import NewsArticle
 
+from kgai_crawler.connector.common_crawl import CommonCrawl
 from kgai_crawler.connector.generic_news import GenericNews
 from kgai_crawler.connector.google_news import GoogNews
 from kgai_crawler.service.news_cleaner import NewsCleaner
+from kgai_crawler.utils.common_utils import hash_article
 
 
 class NewsAggregator(object):
@@ -44,7 +45,7 @@ class NewsAggregator(object):
         self.logger.info("GOOG -- Publishing {} news articles to kafka".format(len(news_articles)))
 
         for article in news_articles:
-            self.kafka_producer.produce(topic=kafka_topic, key=self._hash_article(article),
+            self.kafka_producer.produce(topic=kafka_topic, key=hash_article(article),
                                         value=article)
 
         self.logger.info("GOOG -- Published {} news articles to kafka".format(len(news_articles)))
@@ -66,23 +67,18 @@ class NewsAggregator(object):
         for source in sources:
             news_articles = self.news_client.get_news(source)
 
-            self.logger.info("Publishing {} news articles from {} to kafka".format(len(news_articles), source.url))
+            self.logger.debug("Publishing {} news articles from {} to kafka".format(len(news_articles), source.url))
             # publish to kafka
             for article in news_articles:
-                self.kafka_producer.produce(topic=kafka_topic, key=self._hash_article(article),
+                self.kafka_producer.produce(topic=kafka_topic, key=hash_article(article),
                                             value=article)
-            self.logger.info(
+            self.logger.debug(
                 "Finished publishing {} news articles from {} to kafka".format(len(news_articles), source.url))
 
-    @staticmethod
-    def _hash_article(article: NewsArticle) -> str:
-        """
-        creates a unique ID for an article by hashing
-        Args:
-            article:
-
-        Returns:
-
-        """
-        hash_content = article.articleText + article.title + article.url
-        return xxhash.xxh64(hash_content).hexdigest()
+    def common_crawl_news(self, kafka_topic: str, download_dir_article: str, download_dir_warc: str):
+        # prepare the common crawl connector
+        # this connector takes the kafka producer and the topic and produces directly
+        # to keep the memory footprint low
+        common_crawl = CommonCrawl(download_dir_article=download_dir_article, download_dir_warc=download_dir_warc,
+                                   kafka_producer=self.kafka_producer, kafka_topic=kafka_topic)
+        common_crawl.crawl_news()

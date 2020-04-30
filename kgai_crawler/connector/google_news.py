@@ -34,7 +34,7 @@ class GoogNews(object):
 
         """
         all_articles = []
-        from_date = to_date = base_date =datetime.now()
+        from_date = to_date = base_date = datetime.now()
 
         try:
             if scrape_month:

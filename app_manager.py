@@ -73,9 +73,22 @@ class AppManager(object):
                                               scrape_month=scrape_month)
         self.news_aggregator.aggregate_non_google(kafka_topic=self.kafka_topic)
 
+    def common_crawl_news(self, download_dir_article: str, download_dir_warc: str):
+        self.news_aggregator.common_crawl_news(kafka_topic=self.kafka_topic, download_dir_article=download_dir_article,
+                                               download_dir_warc=download_dir_warc)
+
 
 if __name__ == '__main__':
     load_dotenv()
+    app_manager = AppManager()
     news_topic = os.getenv("NEWS_TOPIC")
+    download_dir_warc = os.getenv("WARC_DOWNLOAD_DIR")
+    download_dir_article = os.getenv("ARTICLE_DOWNLOAD_DIR")
     scrape_month = strtobool(os.getenv("SCRAPE_MONTH"))
-    AppManager().gather_news(news_topic=news_topic, scrape_month=scrape_month)
+    common_crawl = strtobool(os.getenv("COMMON_CRAWL"))
+    news_crawl = strtobool(os.getenv("NEWS_CRAWL"))
+
+    if news_crawl:
+        AppManager().gather_news(news_topic=news_topic, scrape_month=scrape_month)
+    if common_crawl:
+        app_manager.common_crawl_news(download_dir_warc=download_dir_warc, download_dir_article=download_dir_article)

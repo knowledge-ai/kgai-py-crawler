@@ -15,6 +15,11 @@ RUN pip install -r requirements.txt
 RUN pipenv --rm
 RUN pip uninstall -y pipenv
 
+# install aws cli for the common crawl service to run
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+
 
 RUN chmod +x run_app.sh
 CMD [ "sh", "./run_app.sh" ]
